@@ -221,11 +221,12 @@ wsl2和win共享环境变量**$WSLENV**
 | ls -la findstr.exe test.txt                 | 列出当前目录并调用win命令查询                   |
 
 ## 3.网络交互
-
 ### (1)win访问wsl2
+wsl2和win共享localhost(127.0.0.1)，win可通过localhost或wsl2的eth0的IP来访问wsl2服务
+### (2)远程访问wsl2
+防火墙
+ssh
+### (3)wsl2访问win
 
-wsl2和win共享localhost(127.0.0.1)
-
-wsl2的eth0的IP地址独立
-
-docker容器访问可通过宿主机的localhost或eth0来访问
+### (4)wsl2访问远程
+通过eth0 IP访问局域网其他设备，若访问公网则经过NAT转为公网IP直接访问
