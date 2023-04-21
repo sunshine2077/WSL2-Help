@@ -236,3 +236,12 @@ New-NetFirewallRule -DisplayName "WSL" -Direction Inbound  -InterfaceAlias "vEth
 
 ### (4)wsl2访问远程
 通过eth0 IP访问局域网其他设备，若访问公网则经过NAT转为公网IP直接访问
+
+### (5)wsl2使用vpn
+7890为vpn代理程序的端口号
+先获取host_ip为wsl2与外界通讯的IP
+再设置all_procy（https_proxy和http_proxy的合并）
+```shell
+export hostip=$(cat /etc/resolv.conf |grep -oP '(?<=nameserver\ ).*')
+export all_proxy="http://${hostip}:7890"
+```
