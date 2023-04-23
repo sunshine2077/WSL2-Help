@@ -245,3 +245,76 @@ New-NetFirewallRule -DisplayName "WSL" -Direction Inbound  -InterfaceAlias "vEth
 export hostip=$(cat /etc/resolv.conf |grep -oP '(?<=nameserver\ ).*')
 export all_proxy="http://${hostip}:7890"
 ```
+如果没有work可临时关闭win防火墙测试
+# 五.实践
+## 配置go开发环境
+### (1)容器内
+
+```shell
+# 下载ubuntu镜像
+sudo docker pull ubuntu
+# 以Root权限启动ubuntu容器
+sudo docker run -it --privileged=true golang /bin/bash
+# 安装golang
+apt install golang
+# 安装openssh
+apt install openssh-server
+# 安装vim
+apt install vim
+# 时间改为本地时间
+date -s "20230414 21:00:00"
+# 设置go环境：开启go mod和go的中国国内代理
+go env -w GO111MODULE=on
+go env -w GOPROXY="https://goproxy.cn"
+# 创建用户
+useadd -m test
+# 设置密码
+passwd
+# 允许sudo
+vim /etc/sudoers
+# 查找root，添加
+用户名 ALL=(ALL:ALL) ALL
+# 使用/bin/bash而不是/bin/sh
+vim /etc/passwd
+# 修改ssh配置文件
+vim /etc/ssh/sshd_config
+# 禁止root登录
+PermitRootLogin no
+# 先允许密码登录
+PasswordAuthentication yes
+# 允许公钥
+PubkeyAuthentication yes
+# 重启sshd服务
+service ssh restart
+```
+
+### (2)本地powershell
+
+```powershell
+# 客户端本地生成一对公私钥，直接回车
+ssh-keygen -t rsa
+# 发送公钥给服务器
+function ssh-copy-id([string]$userAtMachine, $args){   
+    $publicKey = "$ENV:USERPROFILE" + "/.ssh/id_rsa.pub"
+    if (!(Test-Path "$publicKey")){
+        Write-Error "ERROR: failed to open ID file '$publicKey': No such file"            
+    }
+    else {
+        & cat "$publicKey" | ssh $args $userAtMachine "umask 077; test -d .ssh || mkdir .ssh ; cat >> .ssh/authorized_keys || exit 1"      
+    }
+}
+ssh-copy-id 用户名@ip地址
+输入密码
+# ssh登录
+ssh 用户名@ip地址
+```
+
+### (3)容器内
+
+```shell
+# 关闭密码登录
+vim /etc/ssh/sshd_config
+PasswordAuthentication no
+# 重启sshd服务
+service ssh restart
+```
