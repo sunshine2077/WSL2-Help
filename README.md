@@ -103,7 +103,11 @@ guiApplications=false
 ```
 
 ## 4.docker
-
+```shell
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+```
+若以上不work可尝试以下：
 ```shell
 # 更新apt
 sudo apt update
