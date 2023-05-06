@@ -24,6 +24,9 @@ wsl2的优势：使用方便；与win完全融合，交互便捷；轻量化，�
 
 自行下载，完成后双击安装：[Releases · mishamosher/CentOS-WSL (github.com)](https://github.com/mishamosher/CentOS-WSL/releases)
 
+### (3)命令行安装
+`wsl install [发行版名称]`
+
 ## 3.系统配置
 
 ### (1)wsl.conf
