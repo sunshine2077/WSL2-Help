@@ -14,7 +14,7 @@ wsl2的优势：使用方便；与win完全融合，交互便捷；轻量化，�
 
 控制面板/程序/启动或关闭Windwos功能：虚拟机平台，适用于Windwos的Linux子系统
 
-## 2.系统安装
+## 2.系统安装方式
 
 ### (1)官方发行版
 
@@ -24,7 +24,7 @@ wsl2的优势：使用方便；与win完全融合，交互便捷；轻量化，�
 
 自行下载，完成后双击安装：[Releases · mishamosher/CentOS-WSL (github.com)](https://github.com/mishamosher/CentOS-WSL/releases)
 
-### (3)命令行安装
+### (3)PowerShell安装
 `wsl install [发行版名称]`
 
 ## 3.系统配置
