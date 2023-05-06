@@ -1,6 +1,6 @@
 # 一.wsl1和wsl2
 
-wsl1无完整的linux内核，使用Windows NT kernel来模拟实现linux环境，本质为模拟器
+wsl1无完整的linux内核，使用Windows NT kernel来模拟实现linux环境，将Linux系统调用转化为Windows系统调用，本质为模拟器
 
 wsl2提供完整的linux内核，通过VM虚拟化技术运行linux环境，本质为虚拟机
 
