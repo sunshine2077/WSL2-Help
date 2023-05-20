@@ -1,6 +1,6 @@
 # 一.wsl1和wsl2
 
-wsl1无完整的linux内核，使用Windows NT kernel来模拟实现linux环境，将Linux系统调用转化为Windows系统调用，本质为模拟器
+wsl1无完整的linux内核，使用Windows NT kernel来模拟实现linux环境，将Linux系统调用转化为Win系统调用，本质为模拟器
 
 wsl2提供完整的linux内核，通过VM虚拟化技术运行linux环境，本质为虚拟机
 
@@ -8,24 +8,30 @@ wsl2的优势：使用方便；与win完全融合，交互便捷；轻量化，�
 
 # 二.安装与配置
 
-## 1.wsl2安装前提
+## 1.wsl2安装
 
 保证BIOS中开启虚拟化技术
 
 控制面板/程序/启动或关闭Windwos功能：虚拟机平台，适用于Windwos的Linux子系统
 
-## 2.系统安装方式
+## 2.系统安装
 
-### (1)官方发行版
+### (1)官方发行版手动安装
 
-应用商店下载ubuntu并打开安装
+应用商店下载对应的发行版并打开安装
 
-### (2)第三方发行版
+### (2)官方发行版命令安装
+
+```powershell
+# 查看所有的官方发行版名称
+wsl  --list --online
+# 安装官方发行版
+wsl install -d 发行版名称
+```
+
+### (3)第三方发行版
 
 自行下载，完成后双击安装：[Releases · mishamosher/CentOS-WSL (github.com)](https://github.com/mishamosher/CentOS-WSL/releases)
-
-### (3)PowerShell安装
-`wsl install [发行版名称]`
 
 ## 3.系统配置
 
@@ -106,17 +112,16 @@ guiApplications=false
 ```
 
 ## 4.docker
-```shell
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-```
-若以上不work可尝试以下：
+
 ```shell
 # 更新apt
 sudo apt update
 sudo apt-get update
 sudo apt upgrade
-# 安装docker
+# 方法(1)自动安装docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+# 方法(2)手动安装docker
 sudo apt install docker-ce docker-ce-cli containerd.io
 # 启动docker
 sudo service docker start
@@ -228,33 +233,44 @@ wsl2和win共享环境变量**$WSLENV**
 | ls -la findstr.exe test.txt                 | 列出当前目录并调用win命令查询                   |
 
 ## 3.网络交互
+
 ### (1)win访问wsl2
-wsl2和win共享localhost(127.0.0.1)，win可通过localhost或wsl2的eth0的IP来访问wsl2服务
+
+wsl2和win共享localhost(127.0.0.1)，wsl2有独立的虚拟网卡eth0，win可将localhost或eth0作为目标IP来访问wsl2服务
+
 ### (2)wsl2访问win
+
 1.ipconfig.exe查看win下wsl2的外部通讯网卡，ifconfig查看wsl2的eth0的虚拟网卡，两者应当在`同一网段(IP地址与子网掩码值应相同)`内
+
+```shell
+sudo ifconfig eth0 wsl2虚拟网卡的IP地址 netmask win下wsl2的外部通讯网卡的子网掩码
+```
+
 2.Windows Defender防火墙默认拦截wsl2访问win，管理员打开powershell添加Windows防火墙规则
+
 ```powershell
 # 允许WSL通过防火墙
 New-NetFirewallRule -DisplayName "WSL" -Direction Inbound  -InterfaceAlias "vEthernet (WSL)"  -Action Allow
 # 禁止WSL通过防火墙
 New-NetFirewallRule -DisplayName "WSL" -Direction Inbound  -InterfaceAlias "vEthernet (WSL)"  -Action Block
 ```
+
 ### (3)远程访问wsl2
 
+ssh
+
 ### (4)wsl2访问远程
+
 通过eth0 IP访问局域网其他设备，若访问公网则经过NAT转为公网IP直接访问
 
-### (5)wsl2使用vpn
-7890为vpn代理程序的端口号
-先获取host_ip为wsl2与外界通讯的IP
-再设置all_procy（https_proxy和http_proxy的合并）
-```shell
-export hostip=$(cat /etc/resolv.conf |grep -oP '(?<=nameserver\ ).*')
-export all_proxy="http://${hostip}:7890"
-```
-如果没有work可临时关闭win防火墙测试
+
+
+
+
 # 五.实践
-## 配置go开发环境
+
+## 配置golang开发环境
+
 ### (1)容器内
 
 ```shell
