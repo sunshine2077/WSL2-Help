@@ -33,7 +33,22 @@ wsl install -d 发行版名称
 
 自行下载，完成后双击安装：[Releases · mishamosher/CentOS-WSL (github.com)](https://github.com/mishamosher/CentOS-WSL/releases)
 
-## 3.系统配置
+## 3.系统迁移
+
+系统迁移到D盘：
+
+```powershell
+# 到处镜像
+wsl --export 发行版名称 导出文件位置\导出文件名.tar
+# 注销原有系统
+wsl --unregister 发行版名称
+# 备份文件恢复
+wsl --import 发行版名称 导出文件位置 导出文件位置\导出文件名.tar
+# 恢复默认用户
+发行版名称 config --default-user 默认用户名
+```
+
+## 4.系统配置
 
 ### (1)wsl.conf
 
@@ -111,7 +126,7 @@ debugConsole=true
 guiApplications=false
 ```
 
-## 4.docker
+## 5.docker
 
 ```shell
 # 更新apt
@@ -129,7 +144,7 @@ sudo service docker start
 sudo service docker status
 ```
 
-## 5.注意事项
+## 6.注意事项
 
 存在之前的发行版未删除干净可能导致安装失败，ps执行`wsl --unregister 发行版名称`注销该发行版
 
@@ -341,3 +356,6 @@ PasswordAuthentication no
 # 重启sshd服务
 service ssh restart
 ```
+
+
+
