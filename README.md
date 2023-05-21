@@ -10,7 +10,7 @@ wsl2的优势：使用方便；与win完全融合，交互便捷；轻量化，�
 
 ## 1.wsl2安装
 
-保证BIOS中开启虚拟化技术
+保证BIOS中开启虚拟化技术[大部分计算机默认开启]
 
 控制面板/程序/启动或关闭Windwos功能：虚拟机平台，适用于Windwos的Linux子系统
 
@@ -38,7 +38,7 @@ wsl install -d 发行版名称
 系统迁移到D盘：
 
 ```powershell
-# 到处镜像
+# 导出镜像
 wsl --export 发行版名称 导出文件位置\导出文件名.tar
 # 注销原有系统
 wsl --unregister 发行版名称
