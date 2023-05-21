@@ -304,50 +304,22 @@ ssh
 
 # 五.实践
 
-## 配置golang开发环境
+## 配置python开发环境
 
-### (1)容器内
+### (1)dockerfile
 
+复制dockerfile到linux发行版目录，执行如下操作构建镜像：
 ```shell
-# 下载ubuntu镜像
-sudo docker pull ubuntu
-# 以Root权限启动ubuntu容器
-sudo docker run -it --privileged=true golang /bin/bash
-# 安装golang
-apt install golang
-# 安装openssh
-apt install openssh-server
-# 安装vim
-apt install vim
-# 时间改为本地时间
-date -s "20230414 21:00:00"
-# 设置go环境：开启go mod和go的中国国内代理
-go env -w GO111MODULE=on
-go env -w GOPROXY="https://goproxy.cn"
-# 创建用户
-useadd -m test
-# 设置密码
-passwd
-# 允许sudo
-vim /etc/sudoers
-# 查找root，添加
-用户名 ALL=(ALL:ALL) ALL
-# 使用/bin/bash而不是/bin/sh
-vim /etc/passwd
-# 修改ssh配置文件
-vim /etc/ssh/sshd_config
-# 禁止root登录
-PermitRootLogin no
-# 先允许密码登录
-PasswordAuthentication yes
-# 允许公钥
-PubkeyAuthentication yes
-# 重启sshd服务
-service ssh restart
+sudo docker build -t ubuntu:python .
 ```
 
-### (2)本地powershell
+### (2)启动镜像实例
+```shell
+sudo docker run -d --name python-dev -p 12888:22 -p 12580:8080 -v /home/docker/pythondev:/root ubuntu:python
+```
 
+### (3)ssh登录
+打开powershell
 ```powershell
 # 客户端本地生成一对公私钥，直接回车
 ssh-keygen -t rsa
@@ -365,16 +337,8 @@ ssh-copy-id 用户名@ip地址
 输入密码
 # ssh登录
 ssh 用户名@ip地址
-```
-
-### (3)容器内
-
-```shell
-# 关闭密码登录
-vim /etc/ssh/sshd_config
-PasswordAuthentication no
-# 重启sshd服务
-service ssh restart
+# 服务端检查客户端公钥信息
+cat /.ssh/authorized_keys
 ```
 
 
