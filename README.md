@@ -133,7 +133,7 @@ guiApplications=false
 ```shell
 #  更新wsl
 wsl --update
-# 保证启用wsl2
+# 保证启用wsl2:报错可尝试先wsl --set-version 发行版名称 1，再wsl --set-version 发行版名称 2
 wsl --set-version 发行版名称 2
 ```
 (2) 打开linuxshell
