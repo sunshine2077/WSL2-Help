@@ -127,21 +127,39 @@ guiApplications=false
 ```
 
 ## 5.docker
-
+(1) 打开powershell
+```shell
+#  更新wsl
+wsl --update
+# 保证启用wsl2
+wsl --set-version 发行版名称 2
+```
+(2) 打开linuxshell
 ```shell
 # 更新apt
 sudo apt update
 sudo apt-get update
 sudo apt upgrade
+# 启动systemd
+sudo vim /etc/wsl.conf
+```
+(3) 填入以下内容开启systemd
+```ini
+#允许systemd
+[boot]
+systemd=true
+```
+(4) 下载和安装
+```shell
 # 方法(1)自动安装docker
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
 # 方法(2)手动安装docker
 sudo apt install docker-ce docker-ce-cli containerd.io
 # 启动docker
-sudo service docker start
+sudo systemctl start docker
 # 查看docker状态
-sudo service docker status
+sudo systemctl status docker
 ```
 
 ## 6.注意事项
