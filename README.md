@@ -164,6 +164,30 @@ sudo systemctl start docker
 sudo systemctl status docker
 ```
 
+(5) 安装nvidia-docker
+```shell
+# 安装cuda套件
+sudo apt install nvidia-cuda-toolkit
+# 查看cuda版本
+sudo nvcc --version
+# 获取nvidia-docker源
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)    && curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -    && curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+# 更新源
+sudo apt update
+# 安装nvidia-docker
+sudo apt-get install -y nvidia-docker2
+# 若报/usr/lib/wsl/lib/libcuda.so.1 is not a symbolic link则修复软连接
+cd /usr/lib/wsl
+sudo mkdir lib2
+sudo ln -s lib/* lib2
+sudo vim /etc/ld.so.conf.d/ld.wsl.conf
+# 将 /usr/lib/wsl/lib 改为 /usr/lib/wsl/lib2
+sudo vim /etc/wsl.conf
+# 添加以下项
+[automount]
+ldconfig = fasle
+```
+
 ## 6.注意事项
 
 存在之前的发行版未删除干净可能导致安装失败，ps执行`wsl --unregister 发行版名称`注销该发行版
