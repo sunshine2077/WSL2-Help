@@ -186,7 +186,10 @@ sudo vim /etc/wsl.conf
 # 添加以下项
 [automount]
 ldconfig = fasle
+# 重启docker
+sudo systemctl restart docker
 ```
+
 
 ## 6.注意事项
 
