@@ -86,7 +86,7 @@ wsl --update
 # 保证启用wsl2:报错可尝试先wsl --set-version 发行版名称 1，再wsl --set-version 发行版名称 2
 wsl --set-version 发行版名称 2
 ```
-(2) 打开linuxshell
+(2) 打开linuxshell，更新apt并开启systemd
 ```shell
 # 更新apt
 sudo apt update
@@ -103,11 +103,11 @@ systemd=true
 ```
 (4) 下载和安装
 ```shell
-# 方法(1)自动安装docker
+# 方法(1)官方脚本安装
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
-# 方法(2)手动安装docker
-sudo apt install docker-ce docker-ce-cli containerd.io
+# 方法(2)apt安装
+sudo apt install docker.io
 # 启动docker
 sudo systemctl start docker
 # 查看docker状态
