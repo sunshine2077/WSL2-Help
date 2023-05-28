@@ -50,7 +50,99 @@ wsl --import 发行版名称 导出文件位置 导出文件位置\导出文件�
 发行版名称 config --default-user 默认用户名
 ```
 
-## 4.系统配置
+## 4.设置Bridge网络模式
+(1)家庭版需要先安装hyper-v，执行以下bat命令并重启计算机：
+```bat
+pushd "%~dp0"
+dir /b %SystemRoot%\servicing\Packages\*Hyper-V*.mum >hyper-v.txt
+for /f %%i in ('findstr /i . hyper-v.txt 2^>nul') do dism /online /norestart /add-package:"%SystemRoot%\servicing\Packages\%%i"
+del hyper-v.txt
+Dism /online /enable-feature /featurename:Microsoft-Hyper-V-All /LimitAccess /ALL
+```
+(2)创建虚拟交换机
+用powershell创建虚拟交换机：New-VMSwitch "虚拟交换机名称" -NetAdapterInterfaceDescription "网络适配器名称" 
+```powershell
+New-VMSwitch "wsl2Network" -NetAdapterInterfaceDescription "Remote NDIS based Internet Sharing Device"
+```
+(3)设置wslconfig
+用powershell执行`cd ~`，用notepad创建`.wslconfig`文件，写入以下内容
+```ini
+[wsl2]
+# 使用桥接网络
+networkingMode=bridged
+# 刚刚创建的虚拟交换机
+vmSwitch=wsl2Network
+# 开启ipv6
+ipv6=true
+```
+(4) 打开wsl2终端，输入`ifconfig`查看eth0是否拥有ipv6地址（fe80开头的是本地地址,非fe80开头的才是公网IP）,可通过`https://ipw.cn/ipv6webcheck/`输入ipv6地址测试连通性
+若不连通可能由于Windows防火墙拦截，可临时关闭防火墙测试
+
+## 5.docker
+(1) 打开powershell
+```shell
+#  更新wsl
+wsl --update
+# 保证启用wsl2:报错可尝试先wsl --set-version 发行版名称 1，再wsl --set-version 发行版名称 2
+wsl --set-version 发行版名称 2
+```
+(2) 打开linuxshell
+```shell
+# 更新apt
+sudo apt update
+sudo apt-get update
+sudo apt upgrade
+# 启动systemd
+sudo vim /etc/wsl.conf
+```
+(3) 填入以下内容开启systemd
+```ini
+#允许systemd
+[boot]
+systemd=true
+```
+(4) 下载和安装
+```shell
+# 方法(1)自动安装docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+# 方法(2)手动安装docker
+sudo apt install docker-ce docker-ce-cli containerd.io
+# 启动docker
+sudo systemctl start docker
+# 查看docker状态
+sudo systemctl status docker
+```
+
+(5) 安装nvidia-docker
+```shell
+# 查看nvidia GPU驱动，若无显示则更新Windows显卡驱动和wsl2版本为最新
+nvidia-smi
+# 安装cuda套件
+sudo apt install nvidia-cuda-toolkit
+# 查看cuda版本
+sudo nvcc --version
+# 获取nvidia-docker源
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)    && curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -    && curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+# 更新源
+sudo apt update
+# 安装nvidia-docker
+sudo apt-get install -y nvidia-docker2
+# 若报/usr/lib/wsl/lib/libcuda.so.1 is not a symbolic link则修复软连接
+cd /usr/lib/wsl
+sudo mkdir lib2
+sudo ln -s lib/* lib2
+sudo vim /etc/ld.so.conf.d/ld.wsl.conf
+# 将 /usr/lib/wsl/lib 改为 /usr/lib/wsl/lib2
+sudo vim /etc/wsl.conf
+# 添加以下项
+[automount]
+ldconfig = fasle
+# 重启docker
+sudo systemctl restart docker
+```
+
+## 6.额外系统配置
 
 ### (1)wsl.conf
 
@@ -128,70 +220,7 @@ debugConsole=true
 guiApplications=false
 ```
 
-## 5.docker
-(1) 打开powershell
-```shell
-#  更新wsl
-wsl --update
-# 保证启用wsl2:报错可尝试先wsl --set-version 发行版名称 1，再wsl --set-version 发行版名称 2
-wsl --set-version 发行版名称 2
-```
-(2) 打开linuxshell
-```shell
-# 更新apt
-sudo apt update
-sudo apt-get update
-sudo apt upgrade
-# 启动systemd
-sudo vim /etc/wsl.conf
-```
-(3) 填入以下内容开启systemd
-```ini
-#允许systemd
-[boot]
-systemd=true
-```
-(4) 下载和安装
-```shell
-# 方法(1)自动安装docker
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-# 方法(2)手动安装docker
-sudo apt install docker-ce docker-ce-cli containerd.io
-# 启动docker
-sudo systemctl start docker
-# 查看docker状态
-sudo systemctl status docker
-```
-
-(5) 安装nvidia-docker
-```shell
-# 安装cuda套件
-sudo apt install nvidia-cuda-toolkit
-# 查看cuda版本
-sudo nvcc --version
-# 获取nvidia-docker源
-distribution=$(. /etc/os-release;echo $ID$VERSION_ID)    && curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -    && curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
-# 更新源
-sudo apt update
-# 安装nvidia-docker
-sudo apt-get install -y nvidia-docker2
-# 若报/usr/lib/wsl/lib/libcuda.so.1 is not a symbolic link则修复软连接
-cd /usr/lib/wsl
-sudo mkdir lib2
-sudo ln -s lib/* lib2
-sudo vim /etc/ld.so.conf.d/ld.wsl.conf
-# 将 /usr/lib/wsl/lib 改为 /usr/lib/wsl/lib2
-sudo vim /etc/wsl.conf
-# 添加以下项
-[automount]
-ldconfig = fasle
-# 重启docker
-sudo systemctl restart docker
-```
-
-
-## 6.注意事项
+## 7.注意事项
 
 存在之前的发行版未删除干净可能导致安装失败，ps执行`wsl --unregister 发行版名称`注销该发行版
 
