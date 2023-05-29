@@ -44,7 +44,7 @@ wsl install -d 发行版名称
 wsl --export 发行版名称 导出文件位置\导出文件名.tar
 # 注销原有系统
 wsl --unregister 发行版名称
-# 备份文件恢复
+# 从tar镜像中导出虚拟硬盘，方便使用（之后对WSL2系统的文件操作再虚拟硬盘中进行，镜像不再更新，除非导出新镜像）
 wsl --import 发行版名称 导出文件位置 导出文件位置\导出文件名.tar
 # 恢复默认用户
 发行版名称 config --default-user 默认用户名
