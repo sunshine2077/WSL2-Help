@@ -323,38 +323,6 @@ wsl2和win共享环境变量**$WSLENV**
 | ipconfig.exe \| grep -a IPv4 \| cut -d: -f2 | 调用win命令列出ip配置并查询名为IPV4的信息并截取 |
 | ls -la findstr.exe test.txt                 | 列出当前目录并调用win命令查询                   |
 
-## 3.网络交互
-
-### (1)win访问wsl2
-
-wsl2和win共享localhost(127.0.0.1)，wsl2有独立的虚拟网卡eth0，win可将localhost或eth0作为目标IP来访问wsl2服务
-
-### (2)wsl2访问win
-
-1.ipconfig.exe查看win下wsl2的外部通讯网卡，ifconfig查看wsl2的eth0的虚拟网卡，两者应当在`同一网段(IP地址与子网掩码值应相同)`内
-
-```shell
-sudo ifconfig eth0 wsl2虚拟网卡的IP地址 netmask win下wsl2的外部通讯网卡的子网掩码
-```
-
-2.Windows Defender防火墙默认拦截wsl2访问win，管理员打开powershell添加Windows防火墙规则
-
-```powershell
-# 允许WSL通过防火墙
-New-NetFirewallRule -DisplayName "WSL" -Direction Inbound  -InterfaceAlias "vEthernet (WSL)"  -Action Allow
-# 禁止WSL通过防火墙
-New-NetFirewallRule -DisplayName "WSL" -Direction Inbound  -InterfaceAlias "vEthernet (WSL)"  -Action Block
-```
-
-### (3)远程访问wsl2
-
-ssh
-
-### (4)wsl2访问远程
-
-通过eth0 IP访问局域网其他设备，若访问公网则经过NAT转为公网IP直接访问
-
-
 
 
 
