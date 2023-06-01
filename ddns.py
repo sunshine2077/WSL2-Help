@@ -3,20 +3,22 @@ import netifaces
 import sqlite3
 conn = sqlite3.connect('test.db')
 cmd=conn.cursor()
-datas = cmd.execute("SELECT key, value  from MAIN")
-for temp in datas:
-    local_const=temp[1]
-    break
 print("===检测本机IPV6地址===")
 cfg={
     "zid":"bf3314493769daffdf286898645a90a3",
     "IPV6":netifaces.ifaddresses('eth0')[netifaces.AF_INET6][0]['addr'],
     "HOSTNAME":"www"
 }
-print(local_const,cfg["IPV6"])
-if cfg["IPV6"]==local_const:
-    print("IP地址未发生改变")
-    exit(1)
+print("本地IP：",cfg["IPV6"])
+# CREATE TABLE
+cmd.execute('CREATE TABLE IF NOT EXISTS MAIN (ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, KEY TEXT NOT NULL , VALUE TEXT NOT NULL )')
+datas = cmd.execute("SELECT key, value  from MAIN").fetchall()
+if len(datas)==0:
+    cmd.execute("INSERT INTO MAIN (KEY,VALUE) VALUES('IPV6','{}')".format(cfg['IPV6']))
+else:
+    if cfg["IPV6"]==datas[0][1]:
+        print("IP地址未发生改变")
+        exit(1)
 print("===检测到IP变更，最新IP：{}===".format(cfg["IPV6"]))
 header={
     "X-Auth-Email":"kuainazhou@126.com",
