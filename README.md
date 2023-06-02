@@ -50,7 +50,25 @@ wsl --import 发行版名称 导出文件位置 导出文件位置\导出文件�
 发行版名称 config --default-user 默认用户名
 ```
 
-## 4.设置Bridge网络模式
+## 4.自定义主机名
+```shell
+# 查看默认主机名
+hostname
+# 打开wsl配置文件
+sudo vim /etc/wsl.conf
+# 添加网络配置
+[network]
+hostname= 自定义主机名称
+# 修改host的主机名，将所有原hostname替换为自定义主机名
+sudo vim /etc/hosts
+```
+打开powershell，重启wsl
+```
+wsl --shutdown
+wsl
+```
+
+## 5.设置Bridge网络模式
 (1)家庭版需要先安装hyper-v，执行以下bat命令并重启计算机：
 ```bat
 pushd "%~dp0"
@@ -78,7 +96,7 @@ ipv6=true
 (4) 打开wsl2终端，输入`ifconfig`查看eth0是否拥有ipv6地址（fe80开头的是本地地址,非fe80开头的才是公网IP）,可通过`https://ipw.cn/ipv6webcheck/`输入ipv6地址测试连通性
 若不连通可能由于Windows防火墙拦截，可临时关闭防火墙测试
 
-## 5.docker
+## 6.docker
 (1) 打开powershell
 ```shell
 #  更新wsl
@@ -142,7 +160,7 @@ ldconfig = fasle
 sudo systemctl restart docker
 ```
 
-## 6.额外系统配置
+## 7.额外系统配置参考
 
 ### (1)wsl.conf
 
@@ -220,7 +238,7 @@ debugConsole=true
 guiApplications=false
 ```
 
-## 7.注意事项
+## 8.注意事项
 
 存在之前的发行版未删除干净可能导致安装失败，ps执行`wsl --unregister 发行版名称`注销该发行版
 
@@ -364,6 +382,5 @@ ssh 用户名@ip地址
 # 服务端检查客户端公钥信息
 cat /.ssh/authorized_keys
 ```
-
 
 
