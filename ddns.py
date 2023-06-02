@@ -5,7 +5,7 @@ conn = sqlite3.connect('test.db')
 cmd=conn.cursor()
 print("===检测本机IPV6地址===")
 cfg={
-    "zid":"bf3314493769daffdf286898645a90a3",
+    "zid":"填入域名id",
     "IPV6":netifaces.ifaddresses('eth0')[netifaces.AF_INET6][0]['addr'],
     "HOSTNAME":"www"
 }
@@ -21,8 +21,8 @@ else:
         exit(1)
 print("===检测到IP变更，最新IP：{}===".format(cfg["IPV6"]))
 header={
-    "X-Auth-Email":"kuainazhou@126.com",
-    "X-Auth-Key":"facf6ee86b9e9e9ad7fae944d5664e7a746ad",
+    "X-Auth-Email":"邮箱",
+    "X-Auth-Key":"验证key",
     "Content-Type":"application/json",
 }
 def getDNSID():
@@ -55,11 +55,7 @@ def updateDNS(ids):
         else:
             print("请求成功,id={},domain={}".format(ids[domain],domain))
     print('所有请求完成')
-#ids=getDNSID()
-ids={
-     'test.tianqingjian.eu.org':'bc6e19a999e96001a40bbf1d446685a6',
-     'www.tianqingjian.eu.org':'2f85d760e087918c5e7edb499bf80cb5',
-}
+ids=getDNSID()
 updateDNS(ids)
 cmd.execute("UPDATE MAIN SET VALUE='{}' WHERE key='IPV6'".format(cfg['IPV6']))
 conn.commit()
