@@ -97,7 +97,7 @@ ipv6=true
 若不连通可能由于Windows防火墙拦截，可临时关闭防火墙测试
 
 ## 6.使用代理科学上网
-保证IP地址可以ping的通，可能受Win防火墙影响，端口为clash等的主程序端口
+(1) 保证IP地址可以ping的通，可能受Win防火墙影响，端口为clash等的主程序端口
 ```shell
 export all_proxy="IP地址:端口"
 ```
@@ -107,6 +107,11 @@ export all_proxy="IP地址:端口"
 export all_proxy="http://[n:n:n:n:n:n:d.d.d.d]:7890"
 # IPV4样例
 export all_proxy="http://127.0.0.1:7890"
+```
+(2) 永久生效
+```shell
+ echo "export all_proxy=\"http://[n:n:n:n:n:n:d.d.d.d]:7890\"" >> /etc/profile
+ source /etc/profile
 ```
 
 ## 7.docker
