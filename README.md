@@ -96,7 +96,20 @@ ipv6=true
 (4) 打开wsl2终端，输入`ifconfig`查看eth0是否拥有ipv6地址（fe80开头的是本地地址,非fe80开头的才是公网IP）,可通过`https://ipw.cn/ipv6webcheck/`输入ipv6地址测试连通性
 若不连通可能由于Windows防火墙拦截，可临时关闭防火墙测试
 
-## 6.docker
+## 6.使用代理科学上网
+保证IP地址可以ping的通，可能受Win防火墙影响，端口为clash等的主程序端口
+```shell
+export all_proxy="IP地址:端口"
+```
+样例
+```shell
+# IPV6样例
+export all_proxy="http://[n:n:n:n:n:n:d.d.d.d]:7890"
+# IPV4样例
+export all_proxy="http://127.0.0.1:7890"
+```
+
+## 7.docker
 (1) 打开powershell
 ```shell
 #  更新wsl
@@ -146,7 +159,7 @@ sudo apt-get update && sudo apt-get install -y nvidia-docker2
 sudo systemctl restart docker
 ```
 
-## 7.额外系统配置参考
+## 8.额外系统配置参考
 
 ### (1)wsl.conf
 
