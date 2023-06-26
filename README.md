@@ -78,9 +78,9 @@ del hyper-v.txt
 Dism /online /enable-feature /featurename:Microsoft-Hyper-V-All /LimitAccess /ALL
 ```
 (2)创建虚拟交换机
-用powershell创建虚拟交换机：New-VMSwitch "虚拟交换机名称" -NetAdapterInterfaceDescription "网络适配器名称" 
+用powershell创建虚拟交换机：New-VMSwitch "虚拟交换机名称" -NetAdapterInterfaceDescription "网络适配器描述信息" 或 -NetAdapterName "网络适配器描述名称" 
 ```powershell
-New-VMSwitch "wsl2Network" -NetAdapterInterfaceDescription "Remote NDIS based Internet Sharing Device"
+New-VMSwitch -Name wsl2Network -NetAdapterName "以太网"
 ```
 (3)设置wslconfig
 用powershell执行`cd ~`，用notepad创建`.wslconfig`文件，写入以下内容
