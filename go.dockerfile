@@ -25,5 +25,11 @@ RUN echo "export PATH=$PATH:/usr/local/go/bin" >> /etc/profile && source /etc/pr
 EXPOSE 8080
 # 暴露端口
 EXPOSE 22
+# 复制脚本文件
+COPY start.sh /root/
+# 授权执行
+RUN  chmod +x /root/start.sh
+# 工作文件夹
+WORKDIR /root
 # 容器启动时执行ssh启动命令
-ENTRYPOINT echo "开启SSHD" && /usr/sbin/sshd -D
+ENTRYPOINT ./start.sh

@@ -49,8 +49,14 @@ wsl --import 发行版名称 导出文件位置 导出文件位置\导出文件�
 # 恢复默认用户
 发行版名称 config --default-user 默认用户名
 ```
+## 4.虚拟硬盘压缩以节省空间
+使用powershell，输入vhdx虚拟硬盘路径
+```powershell
+Optimize-VHD -Path 路径.vhdx -Mode Full
+```
 
-## 4.自定义主机名
+
+## 5.自定义主机名
 ```shell
 # 查看默认主机名
 hostname
@@ -68,7 +74,7 @@ wsl --shutdown
 wsl
 ```
 
-## 5.设置Bridge网络模式
+## 6.设置Bridge网络模式
 (1)家庭版需要先安装hyper-v，执行以下bat命令并重启计算机：
 ```bat
 pushd "%~dp0"
@@ -96,7 +102,7 @@ ipv6=true
 (4) 打开wsl2终端，输入`ifconfig`查看eth0是否拥有ipv6地址（fe80开头的是本地地址,非fe80开头的才是公网IP）,可通过`https://ipw.cn/ipv6webcheck/`输入ipv6地址测试连通性
 若不连通可能由于Windows防火墙拦截，可临时关闭防火墙测试
 
-## 6.使用代理科学上网
+## 7.使用代理科学上网
 (1) 保证IP地址可以ping的通，可能受Win防火墙影响，端口为clash等的主程序端口
 ```shell
 export all_proxy="IP地址:端口"
@@ -114,7 +120,7 @@ export all_proxy="http://127.0.0.1:7890"
  source /etc/profile
 ```
 
-## 7.docker
+## 8.docker
 (1) 打开powershell
 ```shell
 #  更新wsl
@@ -164,7 +170,7 @@ sudo apt-get update && sudo apt-get install -y nvidia-docker2
 sudo systemctl restart docker
 ```
 
-## 8.额外系统配置参考
+## 9.额外系统配置参考
 
 ### (1)wsl.conf
 
@@ -242,7 +248,7 @@ debugConsole=true
 guiApplications=false
 ```
 
-## 8.注意事项
+## 10.注意事项
 
 存在之前的发行版未删除干净可能导致安装失败，ps执行`wsl --unregister 发行版名称`注销该发行版
 
