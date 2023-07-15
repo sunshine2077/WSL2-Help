@@ -120,7 +120,7 @@ export all_proxy="http://127.0.0.1:7890"
  source /etc/profile
 ```
 
-## 8.docker
+## 8.安装docker
 (1) 打开powershell
 ```shell
 #  更新wsl
@@ -170,7 +170,26 @@ sudo apt-get update && sudo apt-get install -y nvidia-docker2
 sudo systemctl restart docker
 ```
 
-## 9.额外系统配置参考
+## 9.安装minikube
+
+```shell
+# 下载miniKube
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+# 下载kubectl
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+# 安装minikube到/usr/local/bin
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+# 安装kubectl到/usr/local/bin
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+# 添加当前用户到docker组
+sudo usermod -aG docker $USER && newgrp docker
+# 查看minikube版本
+minikube version
+# 查看kubectl
+kubectl version --output=json
+```
+
+## 10.额外系统配置参考
 
 ### (1)wsl.conf
 
@@ -248,13 +267,24 @@ debugConsole=true
 guiApplications=false
 ```
 
-## 10.注意事项
+## 11.注意事项
 
-存在之前的发行版未删除干净可能导致安装失败，ps执行`wsl --unregister 发行版名称`注销该发行版
+**存在之前的发行版未删除干净可能导致安装失败，ps执行`wsl --unregister 发行版名称`注销该发行版**
 
-安装失败的另一个原因可能是默认的wsl版本较老，ps执行`wsl --update`更新wsl版本
+**安装失败的另一个原因可能是默认的wsl版本较老，ps执行`wsl --update`更新wsl版本**
 
-wsl2支持安装多个发行版，ps执行`wsl -list`可查看各个发行版的信息，用`wsl --setdefault 发行版名称`可设置默认发行版名称
+**wsl2支持安装多个发行版，ps执行`wsl -list`可查看各个发行版的信息，用`wsl --setdefault 发行版名称`可设置默认发行版名称**
+
+**uwf启动失败的临时解决方案（0.36.2版本后该问题修复）：**
+
+```shell
+# 打开vim编辑器，修改ufw中的util.py
+sudo vim /usr/lib/python3/dist-packages/ufw/util.py
+# 修改419行 ppid = open(name).readlines()[0].split(')')[1].split()[1]为：
+ppid = open(name).readlines()[0].rsplit(')',1)[1].split()[1]
+# 输入:wq!保存，执行以下语句开启防火墙
+sudo uwf enable
+```
 
 # 三.基本ps命令
 
@@ -392,5 +422,4 @@ ssh 用户名@ip地址
 # 服务端检查客户端公钥信息
 cat /.ssh/authorized_keys
 ```
-
 
