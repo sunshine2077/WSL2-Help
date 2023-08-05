@@ -49,6 +49,7 @@ wsl --import 发行版名称 导出文件位置 导出文件位置\导出文件�
 # 恢复默认用户
 发行版名称 config --default-user 默认用户名
 ```
+此处导入的tar文件是支持docker导出的tar文件的，也就是说WSL2可以直接运行docker容器
 ## 4.虚拟硬盘压缩以节省空间
 使用powershell，输入vhdx虚拟硬盘路径
 ```powershell
